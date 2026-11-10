@@ -1,0 +1,185 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =========================================================================
+   1. LOCAL & WEBFONT DECLARATIONS: Jameel Noori, MB Lateefi, MB Amar Fayyaz
+   ========================================================================= */
+
+/* Jameel Noori Nastaleeq (Urdu) */
+@font-face {
+  font-family: 'Jameel Noori Nastaleeq';
+  src: local('Jameel Noori Nastaleeq Regular'),
+       local('Jameel Noori Nastaleeq'),
+       local('JameelNooriNastaleeq'),
+       url('/fonts/JameelNooriNastaleeq.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* MB Lateefi (Premier Sindhi Font by Abdul Majid Bhurgri) */
+@font-face {
+  font-family: 'MB Lateefi';
+  src: local('MB-Lateefi-SKv2.0'),
+       local('MB Lateefi'),
+       local('MBLateefi'),
+       url('/fonts/MBLateefi.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* MB Amar Fayyaz (Sindhi/Urdu) */
+@font-face {
+  font-family: 'MB Amar Fayyaz';
+  src: local('MB Amar Fayyaz 1.00'),
+       local('MB Amar Fayyaz'),
+       local('MBAmarFayyaz'),
+       url('/fonts/MBAmarFayyaz.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* MB Sindhi Web */
+@font-face {
+  font-family: 'MB Sindhi Web';
+  src: local('MB-Sindhi-Web-SK-2.0'),
+       local('MB Sindhi Web'),
+       local('MBSindhiWeb'),
+       url('/fonts/MBSindhiWeb.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* =========================================================================
+   2. THEME DEFINITIONS & COLOR SYSTEM
+   ========================================================================= */
+@layer base {
+  /* Default: Royal Emerald & Warm Gold (شاہانہ زمرد و زرّیں) */
+  :root, html.theme-emerald {
+    --bg-main: #04140e;
+    --bg-surface: #082319;
+    --bg-card: rgba(8, 38, 28, 0.85);
+    --border-gold: rgba(212, 175, 55, 0.35);
+    --border-gold-hover: rgba(212, 175, 55, 0.75);
+    --text-primary: #faf8f2;
+    --text-secondary: #c9d6cf;
+    --text-gold: #f5d47a;
+    --accent-glow: rgba(212, 175, 55, 0.2);
+  }
+
+  /* Theme: Classic Book Ivory Parchment (قرطاسِ ادب و کتب) */
+  html.theme-parchment {
+    --bg-main: #fbf9f4;
+    --bg-surface: #f4eee2;
+    --bg-card: #ffffff;
+    --border-gold: rgba(180, 130, 40, 0.3);
+    --border-gold-hover: rgba(180, 130, 40, 0.7);
+    --text-primary: #1c1917;
+    --text-secondary: #44403c;
+    --text-gold: #926317;
+    --accent-glow: rgba(180, 130, 40, 0.15);
+  }
+
+  /* Theme: Midnight Obsidian & Gold (شبینہ و زرّیں) */
+  html.theme-obsidian {
+    --bg-main: #060911;
+    --bg-surface: #0e1422;
+    --bg-card: rgba(16, 23, 38, 0.9);
+    --border-gold: rgba(212, 175, 55, 0.32);
+    --border-gold-hover: rgba(212, 175, 55, 0.7);
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --text-gold: #f5d47a;
+    --accent-glow: rgba(212, 175, 55, 0.2);
+  }
+
+  body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    font-family: 'Noto Naskh Arabic', 'MB Lateefi', 'Outfit', sans-serif;
+    font-feature-settings: "calt" 1, "ccmp" 1, "rlig" 1;
+    overflow-x: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+}
+
+/* =========================================================================
+   3. TYPOGRAPHY CLASSES
+   ========================================================================= */
+
+/* Pure Jameel Noori Nastaleeq for Urdu Poetry */
+.font-jameel, .font-nastaliq {
+  font-family: 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', 'Gulzar', serif;
+  line-height: 2.7;
+  word-spacing: 3px;
+  font-feature-settings: "calt" 1, "ccmp" 1, "rlig" 1;
+}
+
+/* Pure MB Lateefi for Sindhi Poetry & Prose */
+.font-lateefi, .font-sindhi {
+  font-family: 'MB Lateefi', 'MB Amar Fayyaz', 'MB Sindhi Web', 'Noto Naskh Arabic', serif;
+  line-height: 2.4;
+  word-spacing: 2px;
+}
+
+/* MB Amar Fayyaz */
+.font-amar {
+  font-family: 'MB Amar Fayyaz', 'MB Lateefi', serif;
+  line-height: 2.3;
+}
+
+/* Clean, crisp Naskh for Navigations, Buttons & Meta */
+.font-naskh {
+  font-family: 'Noto Naskh Arabic', 'MB Lateefi', 'Amiri', serif;
+  line-height: 2.0;
+}
+
+/* =========================================================================
+   4. LUXURY CARD & AMBIENCE STYLING
+   ========================================================================= */
+.royal-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border-gold);
+  border-radius: 1.5rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.45);
+}
+
+.royal-card:hover {
+  border-color: var(--border-gold-hover);
+  box-shadow: 0 15px 35px -5px var(--accent-glow);
+  transform: translateY(-2px);
+}
+
+.bg-islamic-pattern {
+  background-image: 
+    radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.1) 0%, transparent 60%),
+    radial-gradient(circle at 100% 100%, rgba(16, 185, 129, 0.08) 0%, transparent 50%);
+}
+
+html.theme-parchment .bg-islamic-pattern {
+  background-image: 
+    radial-gradient(circle at 50% 0%, rgba(180, 130, 40, 0.08) 0%, transparent 60%),
+    radial-gradient(circle at 100% 100%, rgba(120, 53, 15, 0.05) 0%, transparent 50%);
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-main);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 55, 0.35);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(212, 175, 55, 0.7);
+}
