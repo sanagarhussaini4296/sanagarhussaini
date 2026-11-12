@@ -11,7 +11,8 @@ import { ARTICLES_DATABASE } from '../data/articlesData';
 export default function ArticlesSection({ onOpenArticle }) {
   const [selectedTag, setSelectedTag] = useState('all');
 
-  const allTags = ['all', 'مرثیہ', 'نوحہ', 'ادبِ عالیہ', 'سنڌي ادب', 'کربلا'];
+  const uniqueTags = Array.from(new Set(ARTICLES_DATABASE.flatMap(a => a.tags)));
+  const allTags = ['all', ...uniqueTags];
 
   const filteredArticles = selectedTag === 'all'
     ? ARTICLES_DATABASE
@@ -98,44 +99,46 @@ export default function ArticlesSection({ onOpenArticle }) {
         </div>
       )}
 
-      {/* Articles Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {filteredArticles.map((article) => (
-          <div 
-            key={article.id}
-            className="royal-card rounded-2xl p-6 flex flex-col justify-between group hover:border-gold-500/60 transition-all"
-          >
-            <div>
-              <div className="flex items-center justify-between text-xs text-gray-300 font-naskh mb-3">
-                <span className="text-gold-300 font-bold">{article.category}</span>
-                <span className="flex items-center gap-1">
-                  <Clock className="w-3.5 h-3.5 text-gold-400" />
-                  {article.readTime}
-                </span>
+      {/* Articles Grid (shown when multiple articles exist) */}
+      {ARTICLES_DATABASE.length > 1 && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {filteredArticles.map((article) => (
+            <div 
+              key={article.id}
+              className="royal-card rounded-2xl p-6 flex flex-col justify-between group hover:border-gold-500/60 transition-all"
+            >
+              <div>
+                <div className="flex items-center justify-between text-xs text-gray-300 font-naskh mb-3">
+                  <span className="text-gold-300 font-bold">{article.category}</span>
+                  <span className="flex items-center gap-1">
+                    <Clock className="w-3.5 h-3.5 text-gold-400" />
+                    {article.readTime}
+                  </span>
+                </div>
+
+                <h4 className="font-nastaliq text-2xl font-bold text-white leading-[2.3] mb-3 group-hover:text-gold-300 transition-colors">
+                  {article.titleUrdu}
+                </h4>
+
+                <p className="font-naskh text-sm sm:text-base text-gray-300 leading-relaxed mb-5 line-clamp-3">
+                  {article.summaryUrdu}
+                </p>
               </div>
 
-              <h4 className="font-nastaliq text-2xl font-bold text-white leading-[2.3] mb-3 group-hover:text-gold-300 transition-colors">
-                {article.titleUrdu}
-              </h4>
-
-              <p className="font-naskh text-sm sm:text-base text-gray-300 leading-relaxed mb-5 line-clamp-3">
-                {article.summaryUrdu}
-              </p>
+              <div className="border-t border-white/10 pt-4 flex items-center justify-between">
+                <span className="text-xs text-gray-400 font-naskh">{article.date}</span>
+                <button
+                  onClick={() => onOpenArticle(article)}
+                  className="text-xs sm:text-sm font-naskh text-gold-300 hover:text-gold-200 flex items-center gap-1 font-bold cursor-pointer"
+                >
+                  <span>مطالعہ کریں</span>
+                  <ArrowLeft className="w-4 h-4" />
+                </button>
+              </div>
             </div>
-
-            <div className="border-t border-white/10 pt-4 flex items-center justify-between">
-              <span className="text-xs text-gray-400 font-naskh">{article.date}</span>
-              <button
-                onClick={() => onOpenArticle(article)}
-                className="text-xs sm:text-sm font-naskh text-gold-300 hover:text-gold-200 flex items-center gap-1 font-bold cursor-pointer"
-              >
-                <span>مطالعہ کریں</span>
-                <ArrowLeft className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
     </section>
   );

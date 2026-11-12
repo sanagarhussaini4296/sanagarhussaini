@@ -104,11 +104,48 @@ export default function ArticleModal({ article, onClose }) {
             style={{ fontSize: `${fontSize}px` }}
             className="font-naskh text-gray-200 light:text-gray-800 leading-[2.4] space-y-6 select-text"
           >
-            {article.content.split('\n\n').map((paragraph, index) => (
-              <p key={index} className="whitespace-pre-line">
-                {paragraph}
-              </p>
-            ))}
+            {article.content.split('\n\n').map((block, index) => {
+              const trimmed = block.trim();
+              if (trimmed.startsWith('## ')) {
+                return (
+                  <h2
+                    key={index}
+                    className="font-nastaliq text-2xl sm:text-3xl font-bold text-gold-300 leading-[2.2] pt-4 pb-1 border-b border-gold-500/20"
+                  >
+                    {trimmed.replace(/^##\s+/, '')}
+                  </h2>
+                );
+              }
+              if (trimmed.startsWith('> ')) {
+                const lines = trimmed
+                  .split('\n')
+                  .map(line => line.replace(/^>\s?/, '').trim());
+                return (
+                  <div
+                    key={index}
+                    className="bg-black/40 border-r-4 border-gold-400 rounded-xl p-5 my-3 shadow-inner space-y-2"
+                  >
+                    {lines.map((line, lIdx) => (
+                      <p
+                        key={lIdx}
+                        className={
+                          lIdx === 0
+                            ? 'font-amiri text-xl sm:text-2xl text-gold-200 leading-[2.2] text-center'
+                            : 'font-naskh text-sm sm:text-base text-gray-200 leading-relaxed text-center'
+                        }
+                      >
+                        {line}
+                      </p>
+                    ))}
+                  </div>
+                );
+              }
+              return (
+                <p key={index} className="whitespace-pre-line">
+                  {trimmed}
+                </p>
+              );
+            })}
           </div>
 
           {/* Tags */}
@@ -123,7 +160,7 @@ export default function ArticleModal({ article, onClose }) {
 
           {/* Author footer box */}
           <div className="p-4 rounded-xl bg-black/30 border border-gold-500/15 flex items-center justify-between text-xs font-naskh text-gray-400">
-            <span>حقوق محفوظ ہیں © ڈاکٹر سانگر حسینی پورٹل</span>
+            <span>حقوق محفوظ ہیں © ثناگر حسینی پورٹل</span>
             <button
               onClick={handleShare}
               className="text-gold-400 hover:text-gold-200 flex items-center gap-1 font-bold cursor-pointer"
