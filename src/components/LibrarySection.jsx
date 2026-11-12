@@ -135,7 +135,7 @@ export default function LibrarySection({ onTriggerDownload }) {
           طلبہ، ذاکرین اور محققین کی آسانی کے لیے تاریخِ اسلام، مراثی، اور صوفیانہ کلام کی معروف آن لائن لائبریریاں:
         </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {EXTERNAL_READING_LINKS.map((link) => (
             <a
               key={link.id}

@@ -57,15 +57,6 @@ export const EXTERNAL_READING_LINKS = [
     icon: "BookOpen"
   },
   {
-    id: "rekhta-marsiya",
-    title: "ریختہ پورٹل — کلاسیکی مرثیہ نگاری",
-    category: "اردو کلاسیکی شاعری و لغت",
-    language: "اردو / رومن",
-    description: "میر انیس، مرزا دبیر، اور جوش ملیح آبادی کے کلاسیکی مراثی اور اردو لغت کا آن لائن مخزن۔",
-    url: "https://www.rekhta.org",
-    icon: "Scroll"
-  },
-  {
     id: "al-islam-library",
     title: "Al-Islam.org Digital Library",
     category: "اسلامی علوم، تاریخ و فکر",
