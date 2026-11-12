@@ -16,8 +16,8 @@ export default function Footer({ setActiveTab, onOpenSubmitModal }) {
                 <Feather className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="font-jameel text-3xl text-gold-300 font-bold leading-tight">پیغامِ ہدایت</h3>
-                <span className="font-jameel text-2xl text-white font-bold block -mt-1">ثناگر حسینی</span>
+                <h3 className="font-jameel text-3xl text-gold-300 font-bold leading-tight whitespace-nowrap">ثناگر حسینی</h3>
+                <span className="text-[11px] font-sans font-semibold text-gold-400/90 tracking-[0.2em] uppercase block mt-0.5">Sanagar Hussaini</span>
               </div>
             </div>
 
@@ -121,7 +121,7 @@ export default function Footer({ setActiveTab, onOpenSubmitModal }) {
         {/* Bottom Bar */}
         <div className="border-t border-white/10 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-400">
           <p>
-            جملہ حقوق محفوظ ہیں © {new Date().getFullYear()} — پیغامِ ہدایت (ثناگر حسینی)
+            جملہ حقوق محفوظ ہیں © {new Date().getFullYear()} — ثناگر حسینی (Sanagar Hussaini)
           </p>
           <div className="flex items-center gap-2 text-gold-400/90 font-medium">
             <span>طراحی برائے عاشقانِ ادب و عزاداری</span>

@@ -59,7 +59,7 @@ export default function Header({
       <div className="bg-gradient-to-r from-black/50 via-[var(--bg-surface)] to-black/50 border-b border-[var(--border-gold)]/30 py-2 px-4 text-xs text-center text-gold-300 font-naskh flex items-center justify-center gap-3">
         <span className="inline-flex items-center gap-1.5 font-medium">
           <Sparkles className="w-3.5 h-3.5 text-gold-400 animate-pulse" />
-          باضابطہ ویب پورٹل برائے کلام، مقالات و علمی ذخیرہ — <strong className="text-white font-bold">پیغامِ ہدایت</strong>
+          باضابطہ ویب پورٹل برائے کلام، مقالات و علمی ذخیرہ — <strong className="text-white font-bold">ثناگر حسینی</strong>
         </span>
         <span className="hidden md:inline-block opacity-40">•</span>
         <button 
@@ -72,38 +72,33 @@ export default function Header({
       </div>
 
       {/* Main Navbar */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-24">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between gap-4 h-24">
           
-          {/* Logo & Portal Identity: پیغامِ ہدایت ثناگر حسینی */}
+          {/* Logo & Portal Identity: ثناگر حسینی in one line with SANAGAR HUSSAINI below */}
           <div 
             onClick={() => { setActiveTab('home'); setMobileMenuOpen(false); }}
-            className="flex items-center gap-3.5 cursor-pointer group select-none"
+            className="flex items-center gap-3.5 cursor-pointer group select-none shrink-0"
           >
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-gold-500/30 via-gold-600/15 to-transparent border-2 border-gold-500/60 flex items-center justify-center shadow-xl shadow-gold-500/15 group-hover:scale-105 group-hover:border-gold-400 transition-all duration-300">
-              <Feather className="w-8 h-8 text-gold-400 group-hover:rotate-12 transition-transform duration-300" />
+            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-gold-500/30 via-gold-600/15 to-transparent border-2 border-gold-500/60 flex items-center justify-center shadow-xl shadow-gold-500/15 group-hover:scale-105 group-hover:border-gold-400 transition-all duration-300 shrink-0">
+              <Feather className="w-7 h-7 sm:w-8 sm:h-8 text-gold-400 group-hover:rotate-12 transition-transform duration-300" />
             </div>
             
-            <div className="flex flex-col">
-              {/* Primary Title: پیغامِ ہدایت */}
-              <div className="font-jameel text-4xl font-bold tracking-wide text-gold-300 leading-[1.5] group-hover:text-gold-200 transition-colors drop-shadow-md">
-                پیغامِ ہدایت
+            <div className="flex flex-col items-start justify-center">
+              {/* Primary Title: ثناگر حسینی in one crisp line */}
+              <div className="font-jameel text-3xl sm:text-4xl font-bold tracking-wide text-gold-300 leading-tight whitespace-nowrap group-hover:text-gold-200 transition-colors drop-shadow-md">
+                ثناگر حسینی
               </div>
               
-              {/* Sub-line: ثناگر حسینی */}
-              <div className="flex items-center gap-2 -mt-1">
-                <span className="font-jameel text-2xl font-bold text-white drop-shadow-sm">
-                  ثناگر حسینی
-                </span>
-                <span className="text-[10px] font-sans text-gold-400/80 tracking-widest uppercase hidden sm:inline-block">
-                  • Sanagar Hussaini
-                </span>
-              </div>
+              {/* English Version directly below Urdu version */}
+              <span className="text-[11px] font-sans font-semibold text-gold-400/90 tracking-[0.2em] uppercase whitespace-nowrap mt-0.5">
+                Sanagar Hussaini
+              </span>
             </div>
           </div>
 
-          {/* Desktop Navigation Links: Increased font size significantly as requested! */}
-          <nav className="hidden lg:flex items-center gap-2">
+          {/* Desktop Navigation Links: Shifted slightly left with generous spacing & single-line items */}
+          <nav className="hidden lg:flex items-center gap-1 xl:gap-1.5 mr-auto ml-2 xl:ml-4">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
@@ -111,15 +106,14 @@ export default function Header({
                 <button
                   key={item.id}
                   onClick={() => setActiveTab(item.id)}
-                  className={`relative px-4 py-2.5 rounded-xl transition-all duration-200 flex items-center gap-2 cursor-pointer ${
+                  className={`relative px-3 xl:px-3.5 py-2 rounded-xl transition-all duration-200 flex items-center gap-2 cursor-pointer whitespace-nowrap shrink-0 ${
                     isActive 
                       ? 'text-gold-300 bg-gold-500/20 border border-gold-500/40 shadow-sm font-bold'
                       : 'text-gray-200 hover:text-white hover:bg-white/10 font-semibold'
                   }`}
                 >
-                  <Icon className={`w-5 h-5 ${isActive ? 'text-gold-400' : 'text-gray-300'}`} />
-                  {/* Significantly increased font size on navigation bar */}
-                  <span className="font-naskh text-lg xl:text-xl tracking-wide">{item.label}</span>
+                  <Icon className={`w-4 h-4 xl:w-5 xl:h-5 shrink-0 ${isActive ? 'text-gold-400' : 'text-gray-300'}`} />
+                  <span className="font-naskh text-base xl:text-lg tracking-wide">{item.label}</span>
                   {isActive && (
                     <span className="absolute bottom-0 right-1/2 translate-x-1/2 w-10 h-0.5 bg-gold-400 rounded-full" />
                   )}
@@ -129,7 +123,7 @@ export default function Header({
           </nav>
 
           {/* Right Action Tools: Search, Font Switcher, Theme Palette, Mobile Menu */}
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2 shrink-0">
             
             {/* Global Search Button */}
             <button

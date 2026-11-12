@@ -41,25 +41,25 @@ export default function Hero({
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
-        {/* Top Centered Identity: Brought upwards with reduced empty space */}
-        <div className="text-center max-w-4xl mx-auto mb-8">
+        {/* Top Centered Identity: ثناگر حسینی in grand calligraphy */}
+        <div className="text-center max-w-4xl mx-auto mb-8 pt-2">
 
-          {/* Big Majestic Paigham-e-Hidayat Heading */}
-          <h1 className="font-jameel text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-gold-300 tracking-wide leading-[1.3] mb-1 drop-shadow-lg">
-            پیغامِ ہدایت
+          {/* Grand Calligraphic Heading: ثناگر حسینی */}
+          <h1
+            className="font-jameel text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold text-gold-300 tracking-wide leading-[1.45] py-1 drop-shadow-[0_6px_28px_rgba(212,175,55,0.45)] select-none"
+            style={{ textShadow: '0 2px 10px rgba(0,0,0,0.65), 0 0 35px rgba(212,175,55,0.35)' }}
+          >
+            ثناگر حسینی
           </h1>
 
-          {/* Printed directly after Paigham-e-Hidayat: ثناگر حسینی */}
-          <div className="font-jameel text-3xl sm:text-4xl md:text-5xl text-white font-bold leading-[1.8] mb-3 drop-shadow-md">
-            ثناگر حسینی
+          {/* Ornamental Calligraphic Flourish */}
+          <div className="flex items-center justify-center gap-3 my-2 opacity-90">
+            <span className="h-[1px] w-16 sm:w-28 bg-gradient-to-l from-gold-400 to-transparent" />
+            <Feather className="w-5 h-5 text-gold-400" />
+            <span className="h-[1px] w-16 sm:w-28 bg-gradient-to-r from-gold-400 to-transparent" />
           </div>
 
-          {/* Majestic Nastaliq Opening Verse */}
-          <div className="font-jameel text-2xl sm:text-3xl md:text-4xl text-gold-100/90 leading-[2.1] mb-3">
-            سخن کی آبرو ٹھہری محبت اہل بیتؑ کی
-          </div>
-
-          <p className="font-naskh text-sm sm:text-base text-gray-300 max-w-2xl mx-auto leading-relaxed">
+          <p className="font-naskh text-sm sm:text-base text-gray-300 max-w-2xl mx-auto leading-relaxed mt-3">
             اردو اور سندھی نوحہ جات، مناقب، مراثی، سلام، فکری مقالات اور نایاب کتب کا جامع ڈیجیٹل مخزن، خاص طور پر ذاکرین اور شائقینِ ادب کے لیے۔
           </p>
 
