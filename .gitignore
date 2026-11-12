@@ -25,4 +25,5 @@ dist-ssr
 token.md
 *token*
 .env*
+.netlify
 
