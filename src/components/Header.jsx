@@ -11,7 +11,11 @@ import {
   Type,
   Menu, 
   X,
-  ChevronDown
+  ChevronDown,
+  Lock,
+  LogOut,
+  ShieldCheck,
+  Plus
 } from 'lucide-react';
 
 export default function Header({ 
@@ -22,7 +26,11 @@ export default function Header({
   fontMode,
   setFontMode,
   openSearchModal,
-  openMimbarShortcut 
+  openMimbarShortcut,
+  isAdmin,
+  onOpenAdminLogin,
+  onAdminLogout,
+  onOpenAddKalam
 }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [themeDropdownOpen, setThemeDropdownOpen] = useState(false);
@@ -56,7 +64,7 @@ export default function Header({
     <header className="sticky top-0 z-40 backdrop-blur-xl bg-[var(--bg-main)]/95 border-b border-[var(--border-gold)] transition-colors duration-300 shadow-md">
       
       {/* Top Banner */}
-      <div className="bg-gradient-to-r from-black/50 via-[var(--bg-surface)] to-black/50 border-b border-[var(--border-gold)]/30 py-2 px-4 text-xs text-center text-gold-300 font-naskh flex items-center justify-center gap-3">
+      <div className="bg-gradient-to-r from-black/50 via-[var(--bg-surface)] to-black/50 border-b border-[var(--border-gold)]/30 py-2 px-4 text-xs text-center text-gold-300 font-naskh flex flex-wrap items-center justify-center gap-3">
         <span className="inline-flex items-center gap-1.5 font-medium">
           <Sparkles className="w-3.5 h-3.5 text-gold-400 animate-pulse" />
           باضابطہ ویب پورٹل برائے کلام، مقالات و علمی ذخیرہ — <strong className="text-white font-bold">ثناگر حسینی</strong>
@@ -69,6 +77,36 @@ export default function Header({
           <Mic2 className="w-3.5 h-3.5" />
           <span>منبر و اسٹیج ریڈنگ موڈ</span>
         </button>
+
+        <span className="hidden sm:inline-block opacity-40">•</span>
+        {isAdmin ? (
+          <div className="inline-flex items-center gap-2">
+            <span className="text-emerald-400 font-bold flex items-center gap-1">
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span>ایڈمن موڈ فعال ہے (sanagar)</span>
+            </span>
+            <button
+              onClick={onOpenAddKalam}
+              className="text-gold-300 hover:text-white underline underline-offset-4 cursor-pointer font-bold"
+            >
+              + نیا کلام
+            </button>
+            <button
+              onClick={onAdminLogout}
+              className="text-red-400 hover:text-red-300 underline underline-offset-4 cursor-pointer"
+            >
+              لاگ آؤٹ
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={onOpenAdminLogin}
+            className="inline-flex items-center gap-1.5 text-gold-400 hover:text-gold-200 underline underline-offset-4 transition-colors cursor-pointer font-bold"
+          >
+            <Lock className="w-3.5 h-3.5" />
+            <span>ایڈمن لاگ ان (Admin Login)</span>
+          </button>
+        )}
       </div>
 
       {/* Main Navbar */}
@@ -122,8 +160,39 @@ export default function Header({
             })}
           </nav>
 
-          {/* Right Action Tools: Search, Font Switcher, Theme Palette, Mobile Menu */}
+          {/* Right Action Tools: Search, Font Switcher, Theme Palette, Admin Button, Mobile Menu */}
           <div className="flex items-center gap-2 shrink-0">
+
+            {/* Admin Login / Logout Quick Button */}
+            {isAdmin ? (
+              <div className="flex items-center gap-1.5">
+                <button
+                  onClick={onOpenAddKalam}
+                  className="px-3 py-2 rounded-xl bg-gold-500 hover:bg-gold-400 text-slate-950 font-bold font-naskh text-xs sm:text-sm flex items-center gap-1.5 cursor-pointer shadow-md"
+                  title="نیا کلام پورٹل میں شامل کریں"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span className="hidden md:inline-block">نیا کلام</span>
+                </button>
+                <button
+                  onClick={onAdminLogout}
+                  className="p-2.5 rounded-xl bg-red-500/15 hover:bg-red-500/25 border border-red-500/30 text-red-300 hover:text-red-100 transition-all cursor-pointer flex items-center gap-1.5"
+                  title="ایڈمن لاگ آؤٹ"
+                >
+                  <LogOut className="w-4 h-4" />
+                  <span className="hidden xl:inline-block text-xs font-naskh font-bold">لاگ آؤٹ</span>
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={onOpenAdminLogin}
+                className="px-3 py-2 rounded-xl bg-gold-500/15 hover:bg-gold-500/25 border border-gold-500/40 text-gold-300 hover:text-gold-100 transition-all cursor-pointer flex items-center gap-1.5 shadow-sm"
+                title="ایڈمن لاگ ان (صرف منتظم کے لیے)"
+              >
+                <Lock className="w-4 h-4 text-gold-400" />
+                <span className="hidden sm:inline-block text-xs font-naskh font-bold">ایڈمن لاگ ان</span>
+              </button>
+            )}
             
             {/* Global Search Button */}
             <button

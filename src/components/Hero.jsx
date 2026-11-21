@@ -10,7 +10,9 @@ import {
   Check,
   Youtube,
   Image as ImageIcon,
-  ExternalLink
+  ExternalLink,
+  Pencil,
+  Trash2
 } from 'lucide-react';
 
 export default function Hero({ 
@@ -21,7 +23,10 @@ export default function Hero({
   copiedId,
   setActiveTab,
   latestPoetry,
-  fontMode
+  fontMode,
+  isAdmin,
+  onEditKalam,
+  onDeleteKalam
 }) {
   const handleOpenYoutube = (kalam) => {
     if (kalam.youtubeUrl) {
@@ -134,9 +139,29 @@ export default function Hero({
                           {kalam.occasion}
                         </span>
                       </div>
-                      <span className="text-[11px] text-gold-400/80 font-sans px-2 py-0.5 rounded bg-white/5">
-                        {isSindhi ? 'سنڌي (MB Lateefi)' : 'اردو (Jameel Noori)'}
-                      </span>
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        {isAdmin && (
+                          <>
+                            <button
+                              onClick={() => onEditKalam(kalam)}
+                              className="p-1.5 rounded-lg bg-amber-500/15 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 cursor-pointer"
+                              title="کلام میں ترمیم کریں"
+                            >
+                              <Pencil className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              onClick={() => onDeleteKalam(kalam)}
+                              className="p-1.5 rounded-lg bg-red-500/15 hover:bg-red-500/30 text-red-300 border border-red-500/30 cursor-pointer"
+                              title="کلام حذف کریں"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </>
+                        )}
+                        <span className="text-[11px] text-gold-400/80 font-sans px-2 py-0.5 rounded bg-white/5">
+                          {isSindhi ? 'سنڌي (MB Lateefi)' : 'اردو (Jameel Noori)'}
+                        </span>
+                      </div>
                     </div>
 
                     {/* Title */}

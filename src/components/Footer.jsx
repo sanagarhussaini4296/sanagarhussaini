@@ -1,7 +1,14 @@
 import React from 'react';
-import { Feather, Sparkles, Youtube, MessageCircle, Mail } from 'lucide-react';
+import { Feather, Sparkles, Youtube, MessageCircle, Mail, Lock, LogOut, Plus, FileText } from 'lucide-react';
 
-export default function Footer({ setActiveTab, onOpenSubmitModal }) {
+export default function Footer({
+  setActiveTab,
+  isAdmin,
+  onOpenAdminLogin,
+  onAdminLogout,
+  onOpenAddKalam,
+  onOpenAddArticle
+}) {
   return (
     <footer className="border-t border-[var(--border-gold)] bg-black/60 text-gray-300 font-naskh pt-16 pb-12 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -25,15 +32,48 @@ export default function Footer({ setActiveTab, onOpenSubmitModal }) {
               اردو و سندھی عزائیہ شاعری، مراثی، نوحہ جات، مناقب، اور ادبی و فکری مقالات کا باضابطہ و مستند پورٹل۔
             </p>
 
-            <div className="pt-2">
-              <button
-                onClick={onOpenSubmitModal}
-                className="px-4 py-2 rounded-xl bg-white/5 hover:bg-gold-500/20 text-gold-300 border border-gold-500/30 text-xs font-naskh font-bold flex items-center gap-2 cursor-pointer transition-colors"
-              >
-                <Sparkles className="w-3.5 h-3.5 text-gold-400" />
-                <span>نیا کلام شامل کریں (ایڈمن)</span>
-              </button>
-            </div>
+            {isAdmin ? (
+              <div className="pt-2 flex flex-wrap items-center gap-2">
+                <button
+                  onClick={onOpenAddKalam}
+                  className="px-3.5 py-2 rounded-xl bg-gold-500/20 hover:bg-gold-500/30 text-gold-300 border border-gold-500/40 text-xs font-naskh font-bold flex items-center gap-1.5 cursor-pointer transition-colors"
+                >
+                  <Plus className="w-3.5 h-3.5 text-gold-400" />
+                  <span>نیا کلام</span>
+                </button>
+                <button
+                  onClick={onOpenAddArticle}
+                  className="px-3.5 py-2 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 text-xs font-naskh font-bold flex items-center gap-1.5 cursor-pointer transition-colors"
+                >
+                  <FileText className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>نیا مقالہ</span>
+                </button>
+                <button
+                  onClick={onAdminLogout}
+                  className="px-3.5 py-2 rounded-xl bg-red-500/15 hover:bg-red-500/30 text-red-300 border border-red-500/30 text-xs font-naskh font-bold flex items-center gap-1.5 cursor-pointer transition-colors"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                  <span>لاگ آؤٹ</span>
+                </button>
+              </div>
+            ) : (
+              <div className="pt-2 flex flex-wrap items-center gap-2">
+                <button
+                  onClick={onOpenAddKalam}
+                  className="px-3.5 py-2 rounded-xl bg-gold-500/20 hover:bg-gold-500/30 text-gold-300 border border-gold-500/40 text-xs font-naskh font-bold flex items-center gap-1.5 cursor-pointer transition-colors"
+                >
+                  <Plus className="w-3.5 h-3.5 text-gold-400" />
+                  <span>نیا کلام شامل کریں</span>
+                </button>
+                <button
+                  onClick={onOpenAdminLogin}
+                  className="px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 border border-white/10 text-xs font-naskh font-bold flex items-center gap-1.5 cursor-pointer transition-colors"
+                >
+                  <Lock className="w-3.5 h-3.5 text-gold-400" />
+                  <span>ایڈمن لاگ ان</span>
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Col 2: Navigation Links (Without video/audio as requested) */}
@@ -127,6 +167,16 @@ export default function Footer({ setActiveTab, onOpenSubmitModal }) {
             <span>طراحی برائے عاشقانِ ادب و عزاداری</span>
             <span>•</span>
             <span>باضابطہ پورٹل</span>
+            {!isAdmin && (
+              <button
+                onClick={onOpenAdminLogin}
+                className="p-1 rounded-md text-gray-500 opacity-30 hover:opacity-100 hover:text-gold-300 transition-opacity cursor-pointer"
+                title="انتظامیہ لاگ ان (Ctrl+Shift+A)"
+                aria-label="Admin Login"
+              >
+                <Lock className="w-3.5 h-3.5" />
+              </button>
+            )}
           </div>
         </div>
 

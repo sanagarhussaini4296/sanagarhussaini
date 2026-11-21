@@ -100,15 +100,15 @@ export default function PoetryCardGenerator({ kalam, onClose }) {
     const divY = ratio === 'square' ? startY + (lines.length * 140) + 20 : startY + (lines.length * 140) + 40;
     ctx.fillText('✦ ✦ ✦', width / 2, divY);
 
-    // Primary Identity: پیغامِ ہدایت
-    ctx.font = 'bold 52px "Jameel Noori Nastaleeq", "Noto Nastaliq Urdu", serif';
+    // Primary Identity: ثناگر حسینی
+    ctx.font = 'bold 56px "Jameel Noori Nastaleeq", "Noto Nastaliq Urdu", serif';
     ctx.fillStyle = cardTheme === 'parchment' ? '#78350f' : '#f5deb3';
-    ctx.fillText('پیغامِ ہدایت', width / 2, ratio === 'square' ? 900 : 1550);
+    ctx.fillText('ثناگر حسینی', width / 2, ratio === 'square' ? 900 : 1550);
 
     // Subtitle / Brand
     ctx.font = '24px "Noto Naskh Arabic", sans-serif';
     ctx.fillStyle = cardTheme === 'parchment' ? '#78716c' : '#9ca3af';
-    ctx.fillText('باضابطہ پورٹل برائے کلام و مقالات', width / 2, ratio === 'square' ? 960 : 1620);
+    ctx.fillText('باضابطہ ویب پورٹل', width / 2, ratio === 'square' ? 960 : 1620);
   };
 
   useEffect(() => {
@@ -122,7 +122,7 @@ export default function PoetryCardGenerator({ kalam, onClose }) {
     const canvas = canvasRef.current;
     if (canvas) {
       const link = document.createElement('a');
-      link.download = `paigham-e-hidayat-${kalam.id || 'poetry'}-card.png`;
+      link.download = `sanagar-hussaini-${kalam.id || 'poetry'}-card.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
     }

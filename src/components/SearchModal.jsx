@@ -6,7 +6,8 @@ import { BOOKS_AND_RESOURCES } from '../data/libraryData';
 export default function SearchModal({ 
   isOpen, 
   onClose, 
-  poetryList, 
+  poetryList,
+  articlesList = ARTICLES_DATABASE,
   onSelectKalam, 
   onSelectArticle,
   onSelectBook 
@@ -50,10 +51,10 @@ export default function SearchModal({
     : [];
 
   const matchedArticles = trimmed
-    ? ARTICLES_DATABASE.filter(a => 
+    ? articlesList.filter(a => 
         a.titleUrdu.toLowerCase().includes(trimmed) ||
         a.summaryUrdu.toLowerCase().includes(trimmed) ||
-        a.tags.some(t => t.toLowerCase().includes(trimmed))
+        (a.tags || []).some(t => t.toLowerCase().includes(trimmed))
       )
     : [];
 

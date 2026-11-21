@@ -11,9 +11,12 @@ import {
   Sparkles,
   ArrowLeft,
   Youtube,
-  ExternalLink
+  ExternalLink,
+  Plus,
+  Pencil,
+  Trash2
 } from 'lucide-react';
-import { GENRES_LIST, OCCASIONS_LIST_1, OCCASIONS_LIST_2 } from '../data/poetryData';
+import { GENRES_LIST, getOccasionsForGenre } from '../data/poetryData';
 
 export default function PoetrySection({ 
   poetryList, 
@@ -24,12 +27,23 @@ export default function PoetrySection({
   copiedId,
   favorites,
   onToggleFavorite,
-  fontMode
+  fontMode,
+  isAdmin,
+  onOpenAddKalam,
+  onEditKalam,
+  onDeleteKalam
 }) {
   const [selectedGenre, setSelectedGenre] = useState('all');
   const [selectedOccasion, setSelectedOccasion] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedId, setExpandedId] = useState(null);
+
+  const occasionScope = getOccasionsForGenre(selectedGenre);
+
+  const handleGenreChange = (genreVal) => {
+    setSelectedGenre(genreVal);
+    setSelectedOccasion('all');
+  };
 
   const handleOpenYoutube = (kalam) => {
     if (kalam.youtubeUrl) {
@@ -60,7 +74,7 @@ export default function PoetrySection({
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold-500/15 border border-gold-500/30 text-gold-300 text-xs font-naskh mb-2.5">
             <Feather className="w-3.5 h-3.5 text-gold-400" />
-            <span>دیوانِ کلام و منظوم نذرانہ ہائے عقیدت — پیغامِ ہدایت</span>
+            <span>دیوانِ کلام و منظوم نذرانہ ہائے عقیدت — ثناگر حسینی</span>
           </div>
           <h2 className="font-jameel text-4xl sm:text-5xl font-bold text-gold-200 leading-[2.2]">
             کلام و شاعری کا مجموعہ
@@ -70,19 +84,29 @@ export default function PoetrySection({
           </p>
         </div>
 
-        {/* Search input */}
-        <div className="w-full md:w-80">
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="کلام، مطلع یا ذاکر کے نام سے تلاش کریں..."
-            className="w-full px-4 py-3 rounded-2xl bg-black/40 border border-gold-500/30 text-white placeholder:text-gray-400 text-sm font-naskh focus:outline-none focus:border-gold-400 shadow-inner"
-          />
+        {/* Search input & Add Kalam Button (Always visible; prompts login if not authenticated) */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
+          <button
+            onClick={onOpenAddKalam}
+            className="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-gold-500 to-gold-400 hover:from-gold-400 hover:to-gold-300 text-slate-950 font-bold font-naskh text-sm flex items-center justify-center gap-2 cursor-pointer shadow-lg shrink-0 hover:scale-105 transition-all"
+            title="نیا کلام پورٹل میں شامل کریں"
+          >
+            <Plus className="w-4 h-4" />
+            <span>نیا کلام شامل کریں</span>
+          </button>
+          <div className="w-full md:w-80">
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="کلام، مطلع یا ذاکر کے نام سے تلاش کریں..."
+              className="w-full px-4 py-2.5 rounded-2xl bg-black/40 border border-gold-500/30 text-white placeholder:text-gray-400 text-sm font-naskh focus:outline-none focus:border-gold-400 shadow-inner"
+            />
+          </div>
         </div>
       </div>
 
-      {/* Filter Row: Genres (Horizontal Pills) + Occasions (DROPDOWN LIST) */}
+      {/* Filter Row: Genres (Horizontal Pills) + Occasions (DYNAMIC DROPDOWN LIST BY GENRE) */}
       <div className="space-y-4 mb-10">
         
         {/* 1. Genre Pills */}
@@ -93,7 +117,7 @@ export default function PoetrySection({
             return (
               <button
                 key={g.value}
-                onClick={() => setSelectedGenre(g.value === 'all' ? 'all' : g.value)}
+                onClick={() => handleGenreChange(g.value === 'all' ? 'all' : g.value)}
                 className={`px-4 py-2 rounded-xl text-sm font-naskh whitespace-nowrap transition-all cursor-pointer flex items-center gap-1.5 ${
                   isSelected
                     ? 'bg-gradient-to-r from-gold-500 to-gold-400 text-slate-950 font-bold shadow-md shadow-gold-500/20 scale-105'
@@ -106,45 +130,65 @@ export default function PoetrySection({
           })}
         </div>
 
-        {/* 2. Occasions DROPDOWN LIST (Grouped by LIST 2 and LIST 1) */}
+        {/* 2. Occasions DROPDOWN LIST (Dynamically scoped by selected genre) */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-2xl bg-black/30 border border-gold-500/20">
           <div className="flex items-center gap-2.5">
             <Calendar className="w-5 h-5 text-gold-400 shrink-0" />
             <div>
               <span className="text-sm font-naskh text-gold-300 font-bold block">
-                مناسبت منتخب فرمائیں (تمام مناسبات کی ڈراپ ڈاؤن فہرست):
+                مناسبت منتخب فرمائیں:
               </span>
               <span className="text-xs text-gray-400 font-naskh">
-                (عزاداری و شہادت اور ولادت و اعیاد کی تفصیلی فہرست)
+                {occasionScope.mode === 'single'
+                  ? `(منتخب صنف: ${occasionScope.allLabel})`
+                  : occasionScope.mode === 'wiladat'
+                  ? '(ولادت، اعیاد اور جشن کی تفصیلی فہرست)'
+                  : occasionScope.mode === 'aza'
+                  ? '(آمدِ محرم، شہادت اور ایامِ عزاداری کی تفصیلی فہرست)'
+                  : '(عزاداری و شہادت اور ولادت و اعیاد کی تفصیلی فہرست)'}
               </span>
             </div>
           </div>
 
-          <div className="w-full sm:w-96">
+          <div className="w-full sm:w-[420px]">
             <select
               value={selectedOccasion}
+              disabled={occasionScope.mode === 'single'}
               onChange={(e) => setSelectedOccasion(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-xl bg-[var(--bg-surface)] border-2 border-gold-500/40 text-gold-200 text-sm font-naskh focus:outline-none focus:border-gold-300 shadow-md cursor-pointer"
+              className={`w-full px-4 py-2.5 rounded-xl bg-[var(--bg-surface)] border-2 border-gold-500/40 text-gold-200 text-sm font-naskh focus:outline-none focus:border-gold-300 shadow-md ${
+                occasionScope.mode === 'single' ? 'opacity-80 cursor-default' : 'cursor-pointer'
+              }`}
             >
               <option value="all" className="bg-[#08261c] text-white">
-                تمام مناسبات (All Occasions)
+                {occasionScope.allLabel}
               </option>
 
-              <optgroup label="LIST 2: محرم الحرام، مصائب و شہادت (Aza & Mourning)">
-                {OCCASIONS_LIST_2.map((occ) => (
-                  <option key={`filter2-${occ}`} value={occ} className="bg-[#08261c] text-white">
+              {(occasionScope.mode === 'aza' || occasionScope.mode === 'wiladat') &&
+                occasionScope.list.map((occ) => (
+                  <option key={`scoped-${occ}`} value={occ} className="bg-[#08261c] text-white">
                     {occ}
                   </option>
                 ))}
-              </optgroup>
 
-              <optgroup label="LIST 1: ولادت، اعیاد، جشن و خوشی (Wiladat & Jashan)">
-                {OCCASIONS_LIST_1.map((occ) => (
-                  <option key={`filter1-${occ}`} value={occ} className="bg-[#08261c] text-white">
-                    {occ}
-                  </option>
-                ))}
-              </optgroup>
+              {occasionScope.mode === 'all' && (
+                <>
+                  <optgroup label="محرم الحرام، مصائب و شہادت (نوحہ، سلام، مرثیہ)">
+                    {occasionScope.list2.map((occ) => (
+                      <option key={`filter2-${occ}`} value={occ} className="bg-[#08261c] text-white">
+                        {occ}
+                      </option>
+                    ))}
+                  </optgroup>
+
+                  <optgroup label="ولادت، اعیاد، جشن و خوشی (قصیدہ، منقبت)">
+                    {occasionScope.list1.map((occ) => (
+                      <option key={`filter1-${occ}`} value={occ} className="bg-[#08261c] text-white">
+                        {occ}
+                      </option>
+                    ))}
+                  </optgroup>
+                </>
+              )}
             </select>
           </div>
         </div>
@@ -190,14 +234,34 @@ export default function PoetrySection({
                       </span>
                     </div>
 
-                    {/* Bookmark favorite button */}
-                    <button
-                      onClick={() => onToggleFavorite(kalam.id)}
-                      className="p-2 rounded-xl hover:bg-white/5 text-gray-400 hover:text-red-400 transition-colors cursor-pointer"
-                      title={isFav ? "پسندیدہ سے ہٹائیں" : "پسندیدہ میں شامل کریں"}
-                    >
-                      <Heart className={`w-4 h-4 ${isFav ? 'text-red-500 fill-red-500' : ''}`} />
-                    </button>
+                    {/* Admin Edit/Delete + Bookmark favorite */}
+                    <div className="flex items-center gap-1 shrink-0">
+                      {isAdmin && (
+                        <>
+                          <button
+                            onClick={() => onEditKalam(kalam)}
+                            className="p-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 transition-colors cursor-pointer"
+                            title="کلام میں ترمیم کریں"
+                          >
+                            <Pencil className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => onDeleteKalam(kalam)}
+                            className="p-2 rounded-xl bg-red-500/15 hover:bg-red-500/30 text-red-300 border border-red-500/30 transition-colors cursor-pointer"
+                            title="کلام حذف کریں"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </>
+                      )}
+                      <button
+                        onClick={() => onToggleFavorite(kalam.id)}
+                        className="p-2 rounded-xl hover:bg-white/5 text-gray-400 hover:text-red-400 transition-colors cursor-pointer"
+                        title={isFav ? "پسندیدہ سے ہٹائیں" : "پسندیدہ میں شامل کریں"}
+                      >
+                        <Heart className={`w-4 h-4 ${isFav ? 'text-red-500 fill-red-500' : ''}`} />
+                      </button>
+                    </div>
                   </div>
 
                   {/* Title */}

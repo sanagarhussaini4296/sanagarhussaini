@@ -71,7 +71,7 @@ export default function MimbarModal({ kalam, onClose, onCopyKalam, copiedId }) {
               اسٹیج و منبر ریڈنگ موڈ
             </h3>
             <span className="text-xs text-gray-300 font-naskh">
-              {kalam.genre} • مناسبت: {kalam.occasion} • پورٹل: <strong className="text-white">پیغامِ ہدایت</strong>
+              {kalam.genre} • مناسبت: {kalam.occasion} • پورٹل: <strong className="text-white">ثناگر حسینی</strong>
             </span>
           </div>
         </div>
@@ -189,7 +189,7 @@ export default function MimbarModal({ kalam, onClose, onCopyKalam, copiedId }) {
           {/* Header Title in Reader */}
           <div className="mb-12 pb-6 border-b border-gold-500/20">
             <span className="text-xs uppercase font-sans tracking-widest text-gold-400 mb-2 block">
-              پیغامِ ہدایت • باضابطہ پورٹل
+              ثناگر حسینی • باضابطہ پورٹل
             </span>
             <h1 className={`${fontChoice} text-4xl sm:text-5xl font-bold leading-[2.4] text-gold-300`}>
               {kalam.titleUrdu}
@@ -223,7 +223,7 @@ export default function MimbarModal({ kalam, onClose, onCopyKalam, copiedId }) {
 
           {/* Footer attribution */}
           <div className="mt-20 pt-8 border-t border-gold-500/20 text-xs font-naskh text-gray-400">
-            <p>پورٹل: پیغامِ ہدایت</p>
+            <p>پورٹل: ثناگر حسینی</p>
           </div>
 
         </div>

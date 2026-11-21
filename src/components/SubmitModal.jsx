@@ -1,28 +1,64 @@
-import React, { useState } from 'react';
-import { X, Plus, Feather, Check, Youtube } from 'lucide-react';
-import { GENRES_LIST, LANGUAGES_LIST, OCCASIONS_LIST_1, OCCASIONS_LIST_2 } from '../data/poetryData';
+import React, { useState, useEffect } from 'react';
+import { X, Plus, Feather, Check, Youtube, Save } from 'lucide-react';
+import { getOccasionsForGenre } from '../data/poetryData';
 
-export default function SubmitModal({ isOpen, onClose, onAddKalam }) {
-  const [formData, setFormData] = useState({
-    titleUrdu: '',
-    genre: 'نوحہ',
-    occasion: 'آمد ِ  محرم',
-    reciter: '',
-    language: 'Urdu',
-    youtubeUrl: '',
-    firstVerse: '',
-    fullKalam: '',
-    year: new Date().getFullYear().toString()
-  });
+const DEFAULT_KALAM_FORM = {
+  titleUrdu: '',
+  genre: 'نوحہ',
+  occasion: 'آمد ِ  محرم',
+  reciter: '',
+  language: 'Urdu',
+  youtubeUrl: '',
+  firstVerse: '',
+  fullKalam: '',
+  year: new Date().getFullYear().toString()
+};
+
+export default function SubmitModal({ isOpen, onClose, kalamToEdit, onSaveKalam }) {
+  const [formData, setFormData] = useState(DEFAULT_KALAM_FORM);
   const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      setSaved(false);
+      if (kalamToEdit) {
+        setFormData({
+          titleUrdu: kalamToEdit.titleUrdu || '',
+          genre: kalamToEdit.genre || 'نوحہ',
+          occasion: kalamToEdit.occasion || 'آمد ِ  محرم',
+          reciter: kalamToEdit.reciter || '',
+          language: kalamToEdit.language || 'Urdu',
+          youtubeUrl: kalamToEdit.youtubeUrl || '',
+          firstVerse: kalamToEdit.firstVerse || '',
+          fullKalam: kalamToEdit.fullKalam || '',
+          year: kalamToEdit.year || new Date().getFullYear().toString()
+        });
+      } else {
+        setFormData({ ...DEFAULT_KALAM_FORM, year: new Date().getFullYear().toString() });
+      }
+    }
+  }, [isOpen, kalamToEdit]);
 
   if (!isOpen) return null;
 
+  const isEditMode = Boolean(kalamToEdit);
+  const occasionScope = getOccasionsForGenre(formData.genre);
+
+  const handleGenreChange = (newGenre) => {
+    const nextScope = getOccasionsForGenre(newGenre);
+    setFormData((prev) => ({
+      ...prev,
+      genre: newGenre,
+      occasion: nextScope.list?.[0] || ''
+    }));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newKalam = {
+    const savedKalam = {
+      ...kalamToEdit,
       ...formData,
-      id: `kalam-${Date.now()}`,
+      id: kalamToEdit?.id || `kalam-${Date.now()}`,
       genreSlug: formData.genre === 'نوحہ' ? 'noha' 
                : formData.genre === 'منقبت' ? 'manqabat'
                : formData.genre === 'سلام' ? 'salam'
@@ -30,27 +66,16 @@ export default function SubmitModal({ isOpen, onClose, onAddKalam }) {
                : formData.genre === 'نعت' ? 'naat'
                : formData.genre === 'حمد' ? 'hamd'
                : 'qaseeda',
-      titleRoman: formData.titleUrdu,
-      views: '1',
-      popular: false
+      titleRoman: kalamToEdit?.titleRoman || formData.titleUrdu,
+      views: kalamToEdit?.views || '1',
+      popular: kalamToEdit?.popular ?? false
     };
-    onAddKalam(newKalam);
+    onSaveKalam(savedKalam, isEditMode);
     setSaved(true);
     setTimeout(() => {
       setSaved(false);
       onClose();
-      setFormData({
-        titleUrdu: '',
-        genre: 'نوحہ',
-        occasion: 'آمد ِ  محرم',
-        reciter: '',
-        language: 'Urdu',
-        youtubeUrl: '',
-        firstVerse: '',
-        fullKalam: '',
-        year: new Date().getFullYear().toString()
-      });
-    }, 1500);
+    }, 1000);
   };
 
   return (
@@ -62,12 +87,12 @@ export default function SubmitModal({ isOpen, onClose, onAddKalam }) {
           <div className="flex items-center gap-2">
             <Feather className="w-5 h-5 text-gold-400" />
             <h3 className="font-jameel text-2xl font-bold text-gold-300">
-              نیا کلام پورٹل میں شامل کریں
+              {isEditMode ? 'کلام میں ترمیم کریں' : 'نیا کلام پورٹل میں شامل کریں'}
             </h3>
           </div>
           <button 
             onClick={onClose}
-            className="p-1 rounded-lg text-gray-400 hover:text-white"
+            className="p-1 rounded-lg text-gray-400 hover:text-white cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -78,8 +103,12 @@ export default function SubmitModal({ isOpen, onClose, onAddKalam }) {
           {saved ? (
             <div className="text-center py-12">
               <Check className="w-12 h-12 text-emerald-400 mx-auto mb-3" />
-              <h4 className="font-jameel text-3xl text-white font-bold mb-1">کلام کامیابی سے شامل کر دیا گیا!</h4>
-              <p className="font-naskh text-sm text-gray-300">نیا کلام صفحۂ اول کے تازہ ترین کلام میں شامل ہو چکا ہے۔</p>
+              <h4 className="font-jameel text-3xl text-white font-bold mb-1">
+                {isEditMode ? 'کلام کامیابی سے اپڈیٹ ہو گیا!' : 'کلام کامیابی سے شامل کر دیا گیا!'}
+              </h4>
+              <p className="font-naskh text-sm text-gray-300">
+                {isEditMode ? 'تبدیلیاں محفوظ کر لی گئی ہیں۔' : 'نیا کلام صفحۂ اول کے تازہ ترین کلام میں شامل ہو چکا ہے۔'}
+              </p>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -105,7 +134,7 @@ export default function SubmitModal({ isOpen, onClose, onAddKalam }) {
                   <label className="block text-xs font-naskh text-gold-300 mb-1.5 font-bold">صنف (Genre):</label>
                   <select
                     value={formData.genre}
-                    onChange={(e) => setFormData({...formData, genre: e.target.value})}
+                    onChange={(e) => handleGenreChange(e.target.value)}
                     className="w-full px-4 py-2.5 rounded-xl bg-[var(--bg-surface)] border border-gold-500/30 text-white text-sm font-naskh focus:outline-none focus:border-gold-400 cursor-pointer"
                   >
                     <option value="حمد">حمد (Hamd)</option>
@@ -118,7 +147,7 @@ export default function SubmitModal({ isOpen, onClose, onAddKalam }) {
                   </select>
                 </div>
 
-                {/* 2. مناسبت / موضوع (Grouped from LIST 1 and LIST 2) */}
+                {/* 2. مناسبت / موضوع (Scoped dynamically by selected genre) */}
                 <div>
                   <label className="block text-xs font-naskh text-gold-300 mb-1.5 font-bold">مناسبت / موضوع (Occasion):</label>
                   <select
@@ -126,20 +155,11 @@ export default function SubmitModal({ isOpen, onClose, onAddKalam }) {
                     onChange={(e) => setFormData({...formData, occasion: e.target.value})}
                     className="w-full px-4 py-2.5 rounded-xl bg-[var(--bg-surface)] border border-gold-500/30 text-white text-sm font-naskh focus:outline-none focus:border-gold-400 cursor-pointer"
                   >
-                    <optgroup label="LIST 2: محرم الحرام، مصائب و شہادت (Aza)">
-                      {OCCASIONS_LIST_2.map((occ) => (
-                        <option key={`list2-${occ}`} value={occ} className="bg-[#08261c] text-white">
-                          {occ}
-                        </option>
-                      ))}
-                    </optgroup>
-                    <optgroup label="LIST 1: ولادت، اعیاد و جشن (Wiladat & Jashan)">
-                      {OCCASIONS_LIST_1.map((occ) => (
-                        <option key={`list1-${occ}`} value={occ} className="bg-[#08261c] text-white">
-                          {occ}
-                        </option>
-                      ))}
-                    </optgroup>
+                    {(occasionScope.list || []).map((occ) => (
+                      <option key={`modal-${occ}`} value={occ} className="bg-[#08261c] text-white">
+                        {occ}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>
@@ -220,8 +240,8 @@ export default function SubmitModal({ isOpen, onClose, onAddKalam }) {
                 type="submit"
                 className="w-full py-3.5 rounded-xl bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 hover:from-gold-500 hover:to-gold-400 text-slate-950 font-bold font-naskh text-base transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-gold-500/20"
               >
-                <Plus className="w-5 h-5 text-slate-950" />
-                <span>کلام شائع کریں</span>
+                {isEditMode ? <Save className="w-5 h-5 text-slate-950" /> : <Plus className="w-5 h-5 text-slate-950" />}
+                <span>{isEditMode ? 'تبدیلیاں محفوظ کریں' : 'کلام شائع کریں'}</span>
               </button>
             </form>
           )}

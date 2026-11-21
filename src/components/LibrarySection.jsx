@@ -27,7 +27,7 @@ export default function LibrarySection({ onTriggerDownload }) {
       <div className="mb-12 pb-6 border-b border-[var(--border-gold)]">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold-500/15 border border-gold-500/30 text-gold-300 text-xs font-naskh mb-2.5">
           <BookOpen className="w-3.5 h-3.5 text-gold-400" />
-          <span>علمی و فکری ذخیرہ — پیغامِ ہدایت</span>
+          <span>علمی و فکری ذخیرہ — ثناگر حسینی</span>
         </div>
         <h2 className="font-nastaliq text-4xl sm:text-5xl font-bold text-gold-200 leading-[2.2]">
           کتب خانہ و مطالعہ گاہ
