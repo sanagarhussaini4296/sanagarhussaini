@@ -8,6 +8,7 @@ export default function SearchModal({
   onClose, 
   poetryList,
   articlesList = ARTICLES_DATABASE,
+  booksList = BOOKS_AND_RESOURCES,
   onSelectKalam, 
   onSelectArticle,
   onSelectBook 
@@ -59,8 +60,10 @@ export default function SearchModal({
     : [];
 
   const matchedBooks = trimmed
-    ? BOOKS_AND_RESOURCES.filter(b => 
+    ? booksList.filter(b => 
         b.titleUrdu.toLowerCase().includes(trimmed) ||
+        (b.titleEnglish && b.titleEnglish.toLowerCase().includes(trimmed)) ||
+        (b.author && b.author.toLowerCase().includes(trimmed)) ||
         b.description.toLowerCase().includes(trimmed)
       )
     : [];

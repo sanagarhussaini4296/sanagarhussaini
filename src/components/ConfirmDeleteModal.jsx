@@ -15,7 +15,7 @@ export default function ConfirmDeleteModal({ isOpen, title, itemType, onCancel, 
             </div>
             <div>
               <h3 className="font-jameel text-2xl font-bold text-white leading-tight">
-                {itemType === 'article' ? 'مقالہ حذف کریں؟' : 'کلام حذف کریں؟'}
+                {itemType === 'article' ? 'مقالہ حذف کریں؟' : itemType === 'book' ? 'کتاب / مواد حذف کریں؟' : 'کلام حذف کریں؟'}
               </h3>
               <p className="text-xs font-naskh text-gray-400">
                 یہ عمل واپس نہیں ہو سکے گا

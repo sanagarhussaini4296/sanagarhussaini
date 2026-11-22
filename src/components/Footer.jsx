@@ -1,5 +1,5 @@
 import React from 'react';
-import { Feather, Sparkles, Youtube, MessageCircle, Mail, Lock, LogOut, Plus, FileText } from 'lucide-react';
+import { Feather, Sparkles, Youtube, MessageCircle, Mail, Lock, LogOut, Plus, FileText, BookOpen } from 'lucide-react';
 
 export default function Footer({
   setActiveTab,
@@ -7,7 +7,8 @@ export default function Footer({
   onOpenAdminLogin,
   onAdminLogout,
   onOpenAddKalam,
-  onOpenAddArticle
+  onOpenAddArticle,
+  onOpenAddBook
 }) {
   return (
     <footer className="border-t border-[var(--border-gold)] bg-black/60 text-gray-300 font-naskh pt-16 pb-12 transition-colors">
@@ -47,6 +48,13 @@ export default function Footer({
                 >
                   <FileText className="w-3.5 h-3.5 text-emerald-400" />
                   <span>نیا مقالہ</span>
+                </button>
+                <button
+                  onClick={onOpenAddBook}
+                  className="px-3.5 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-naskh font-bold flex items-center gap-1.5 cursor-pointer transition-colors"
+                >
+                  <BookOpen className="w-3.5 h-3.5 text-amber-400" />
+                  <span>نئی کتاب</span>
                 </button>
                 <button
                   onClick={onAdminLogout}

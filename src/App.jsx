@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ShieldCheck, Plus, FileText, LogOut } from 'lucide-react';
+import { ShieldCheck, Plus, FileText, LogOut, BookOpen } from 'lucide-react';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import PoetrySection from './components/PoetrySection';
@@ -14,6 +14,7 @@ import ArticleModal from './components/ArticleModal';
 import SearchModal from './components/SearchModal';
 import SubmitModal from './components/SubmitModal';
 import ArticleSubmitModal from './components/ArticleSubmitModal';
+import BookSubmitModal from './components/BookSubmitModal';
 import AdminLoginModal from './components/AdminLoginModal';
 import ConfirmDeleteModal from './components/ConfirmDeleteModal';
 import PoetryCardGenerator from './components/PoetryCardGenerator';
@@ -21,6 +22,7 @@ import PoetryCardGenerator from './components/PoetryCardGenerator';
 // Data
 import { POETRY_DATABASE, OCCASIONS_LIST_1, OCCASIONS_LIST_2 } from './data/poetryData';
 import { ARTICLES_DATABASE } from './data/articlesData';
+import { BOOKS_AND_RESOURCES } from './data/libraryData';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('home');
@@ -56,6 +58,15 @@ export default function App() {
     return ARTICLES_DATABASE;
   });
 
+  // Books / Library state (Persists in browser)
+  const [booksList, setBooksList] = useState(() => {
+    try {
+      const saved = localStorage.getItem('sanagar_books_list_v1');
+      if (saved) return JSON.parse(saved);
+    } catch (e) {}
+    return BOOKS_AND_RESOURCES;
+  });
+
   // Dynamic Occasions state (Admin can add/delete occasions, persists in browser)
   const [occasionsList1, setOccasionsList1] = useState(() => {
     try {
@@ -86,6 +97,8 @@ export default function App() {
   const [editingKalam, setEditingKalam] = useState(null);
   const [articleSubmitOpen, setArticleSubmitOpen] = useState(false);
   const [editingArticle, setEditingArticle] = useState(null);
+  const [bookSubmitOpen, setBookSubmitOpen] = useState(false);
+  const [editingBook, setEditingBook] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
 
   // Copy / status toast
@@ -119,6 +132,12 @@ export default function App() {
       localStorage.setItem('sanagar_articles_list_v1', JSON.stringify(articlesList));
     } catch (e) {}
   }, [articlesList]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('sanagar_books_list_v1', JSON.stringify(booksList));
+    } catch (e) {}
+  }, [booksList]);
 
   useEffect(() => {
     try {
@@ -202,6 +221,8 @@ export default function App() {
     setPendingAction(null);
     setSubmitOpen(false);
     setArticleSubmitOpen(false);
+    setBookSubmitOpen(false);
+    setEditingBook(null);
     setDeleteTarget(null);
     try {
       sessionStorage.removeItem('sanagar_admin_auth');
@@ -231,7 +252,12 @@ export default function App() {
   };
 
   const handleTriggerDownload = (book) => {
-    showToast(`کتاب "${book.titleUrdu}" کا ڈاؤنلوڈ شروع ہو گیا...`, 3000);
+    if (book.downloadUrl && (book.downloadUrl.startsWith('http://') || book.downloadUrl.startsWith('https://'))) {
+      window.open(book.downloadUrl, '_blank', 'noopener,noreferrer');
+      showToast(`کتاب "${book.titleUrdu}" کا لنک کھولا جا رہا ہے...`, 3000);
+    } else {
+      showToast(`کتاب "${book.titleUrdu}" کا ڈاؤنلوڈ شروع ہو گیا...`, 3000);
+    }
   };
 
   // Poetry CRUD (Admin only)
@@ -289,6 +315,32 @@ export default function App() {
     }
   };
 
+  // Books CRUD (Admin only)
+  const handleOpenAddBook = () => requireAdmin(() => {
+    setEditingBook(null);
+    setBookSubmitOpen(true);
+  });
+
+  const handleOpenEditBook = (book) => requireAdmin(() => {
+    setEditingBook(book);
+    setBookSubmitOpen(true);
+  });
+
+  const handleRequestDeleteBook = (book) => requireAdmin(() => {
+    setDeleteTarget({ type: 'book', item: book });
+  });
+
+  const handleSaveBook = (savedBook, isEditMode) => {
+    if (!isAdmin) return;
+    if (isEditMode) {
+      setBooksList(prev => prev.map(item => item.id === savedBook.id ? savedBook : item));
+      showToast('کتاب کی تفصیلات کامیابی سے اپڈیٹ ہو گئیں!');
+    } else {
+      setBooksList(prev => [savedBook, ...prev]);
+      showToast('نئی کتاب کامیابی سے کتب خانہ میں شامل ہو گئی!');
+    }
+  };
+
   // Delete confirmation handler
   const handleConfirmDelete = () => {
     if (!isAdmin || !deleteTarget) return;
@@ -300,6 +352,9 @@ export default function App() {
       setArticlesList(prev => prev.filter(item => item.id !== deleteTarget.item.id));
       if (selectedArticle?.id === deleteTarget.item.id) setSelectedArticle(null);
       showToast('مقالہ کامیابی سے حذف کر دیا گیا۔');
+    } else if (deleteTarget.type === 'book') {
+      setBooksList(prev => prev.filter(item => item.id !== deleteTarget.item.id));
+      showToast('کتاب کامیابی سے کتب خانہ سے حذف کر دی گئی۔');
     }
     setDeleteTarget(null);
   };
@@ -334,6 +389,13 @@ export default function App() {
           >
             <FileText className="w-3.5 h-3.5" />
             <span>نیا مقالہ</span>
+          </button>
+          <button
+            onClick={handleOpenAddBook}
+            className="px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/35 text-amber-200 border border-amber-500/40 text-xs font-naskh font-bold flex items-center gap-1 cursor-pointer"
+          >
+            <BookOpen className="w-3.5 h-3.5" />
+            <span>نئی کتاب</span>
           </button>
           <button
             onClick={handleAdminLogout}
@@ -391,7 +453,12 @@ export default function App() {
 
             {/* Quick Library Preview on Home */}
             <LibrarySection
+              booksList={booksList}
               onTriggerDownload={handleTriggerDownload}
+              isAdmin={isAdmin}
+              onOpenAddBook={handleOpenAddBook}
+              onEditBook={handleOpenEditBook}
+              onDeleteBook={handleRequestDeleteBook}
             />
           </>
         )}
@@ -429,7 +496,12 @@ export default function App() {
 
         {activeTab === 'library' && (
           <LibrarySection
+            booksList={booksList}
             onTriggerDownload={handleTriggerDownload}
+            isAdmin={isAdmin}
+            onOpenAddBook={handleOpenAddBook}
+            onEditBook={handleOpenEditBook}
+            onDeleteBook={handleRequestDeleteBook}
           />
         )}
 
@@ -446,6 +518,7 @@ export default function App() {
         onAdminLogout={handleAdminLogout}
         onOpenAddKalam={handleOpenAddKalam}
         onOpenAddArticle={handleOpenAddArticle}
+        onOpenAddBook={handleOpenAddBook}
       />
 
       {/* Modals */}
@@ -477,6 +550,7 @@ export default function App() {
         onClose={() => setSearchOpen(false)}
         poetryList={poetryList}
         articlesList={articlesList}
+        booksList={booksList}
         onSelectKalam={(kalam) => setMimbarKalam(kalam)}
         onSelectArticle={(article) => setSelectedArticle(article)}
         onSelectBook={() => setActiveTab('library')}
@@ -514,6 +588,16 @@ export default function App() {
         }}
         articleToEdit={editingArticle}
         onSaveArticle={handleSaveArticle}
+      />
+
+      <BookSubmitModal
+        isOpen={bookSubmitOpen}
+        onClose={() => {
+          setBookSubmitOpen(false);
+          setEditingBook(null);
+        }}
+        bookToEdit={editingBook}
+        onSaveBook={handleSaveBook}
       />
 
       <ConfirmDeleteModal

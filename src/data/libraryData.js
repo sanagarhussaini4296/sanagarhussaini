@@ -33,7 +33,7 @@ export const BOOKS_AND_RESOURCES = [
     id: "majalis-e-aza-handbook",
     titleUrdu: "رہنمائے مجالس و عزاداری (کتابچہ برائے ذاکرین)",
     titleEnglish: "Majalis & Azadari Guide for Reciters & Zakireen",
-    author: "مرتب: ادارہ پیغامِ ہدایت",
+    author: "مرتب: ادارہ ثناگر حسینی",
     pages: "64 صفحات",
     fileSize: "3.1 MB",
     type: "کتابچہ (پی ڈی ایف ڈاؤنلوڈ)",
