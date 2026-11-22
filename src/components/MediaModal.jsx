@@ -6,7 +6,7 @@ export default function MediaModal({ kalam, onClose, onOpenMimbar, onCopyKalam, 
   const isCopied = copiedId === kalam.id;
 
   const shareOnWhatsApp = () => {
-    const text = `*${kalam.titleUrdu}*\nشاعر: ثناگر حسینی\nآواز: ${kalam.reciter}\n\n${kalam.firstVerse}\n\nمکمل کلام و آڈیو سماعت کریں:\n— پیغامِ ہدایت پورٹل`;
+    const text = `*${kalam.titleUrdu}*\nشاعر: ثناگر حسینی\nآواز: ${kalam.reciter || 'نامعلوم'}${kalam.year ? `\nتاریخ / سال: ${kalam.year}` : ''}\n\n${kalam.firstVerse}\n\nمکمل کلام و آڈیو سماعت کریں:\n— باضابطہ پورٹل: ثناگر حسینی`;
     window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
   };
 
@@ -45,7 +45,7 @@ export default function MediaModal({ kalam, onClose, onOpenMimbar, onCopyKalam, 
                 {kalam.titleUrdu}
               </h4>
               <p className="font-naskh text-sm sm:text-base text-gray-300">
-                شاعر: <strong className="text-gold-300">ثناگر حسینی</strong> • نوحہ خواں / ذاکر: <span className="text-white font-medium">{kalam.reciter}</span>
+                شاعر: <strong className="text-gold-300">ثناگر حسینی</strong> • نوحہ خواں / ذاکر: <span className="text-white font-medium">{kalam.reciter || 'نامعلوم'}</span>{kalam.year ? ` • تاریخ / سال: ${kalam.year}` : ''}
               </p>
             </div>
 

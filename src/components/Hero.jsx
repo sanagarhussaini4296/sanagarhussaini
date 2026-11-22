@@ -12,7 +12,8 @@ import {
   Image as ImageIcon,
   ExternalLink,
   Pencil,
-  Trash2
+  Trash2,
+  Calendar
 } from 'lucide-react';
 
 export default function Hero({ 
@@ -176,15 +177,18 @@ export default function Hero({
                       </p>
                     </div>
 
-                    {/* Reciter info */}
-                    <div className="text-xs text-gray-300 font-naskh mb-4 flex items-center justify-between border-b border-white/10 pb-2.5">
+                    {/* Reciter & Date/Year info */}
+                    <div className="text-xs text-gray-300 font-naskh mb-4 flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-2.5">
                       <div>
                         <span>آواز / نوحہ خواں: </span>
-                        <strong className="text-white font-medium">{kalam.reciter}</strong>
+                        <strong className="text-white font-medium">{kalam.reciter || 'نامعلوم'}</strong>
                       </div>
-                      <span className="text-gold-400/90 font-medium font-sans">
-                        {kalam.year}
-                      </span>
+                      {kalam.year && (
+                        <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-gold-500/10 border border-gold-500/20 text-gold-300 font-naskh">
+                          <Calendar className="w-3.5 h-3.5 text-gold-400 shrink-0" />
+                          <span>تاریخ / سال: <strong className="text-white font-medium">{kalam.year}</strong></span>
+                        </div>
+                      )}
                     </div>
                   </div>
 

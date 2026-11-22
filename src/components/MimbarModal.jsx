@@ -148,7 +148,12 @@ export default function MimbarModal({ kalam, onClose, onCopyKalam, copiedId }) {
     // Reciter / Info
     ctx.font = '24px "Noto Naskh Arabic", sans-serif';
     ctx.fillStyle = isParchment ? '#57534e' : '#cbd5e1';
-    ctx.fillText(`نوحہ خواں / ذاکر: ${kalam.reciter}  •  سال: ${kalam.year}`, width / 2, 260);
+    const reciterText = kalam.reciter ? `نوحہ خواں / ذاکر: ${kalam.reciter}` : '';
+    const dateText = kalam.year ? `تاریخ / سال: ${kalam.year}` : '';
+    const fullInfoLine = [reciterText, dateText].filter(Boolean).join('  •  ');
+    if (fullInfoLine) {
+      ctx.fillText(fullInfoLine, width / 2, 260);
+    }
 
     // Header divider
     ctx.fillStyle = isParchment ? '#926317' : '#d4af37';
@@ -414,8 +419,14 @@ export default function MimbarModal({ kalam, onClose, onCopyKalam, copiedId }) {
             <h1 className={`${fontChoice} text-4xl sm:text-5xl font-bold leading-[2.4] text-gold-200`}>
               {kalam.titleUrdu}
             </h1>
-            <p className="font-naskh text-sm text-gray-300 mt-2">
-              نوحہ خواں / ذاکر: <strong className="text-white font-medium">{kalam.reciter}</strong> • سال: {kalam.year}
+            <p className="font-naskh text-sm text-gray-300 mt-2 flex items-center justify-center gap-3 flex-wrap">
+              <span>نوحہ خواں / ذاکر: <strong className="text-white font-medium">{kalam.reciter || 'نامعلوم'}</strong></span>
+              {kalam.year && (
+                <>
+                  <span className="text-gold-500/50">•</span>
+                  <span className="text-gold-300 font-medium">تاریخ / سال: <strong className="text-white font-medium">{kalam.year}</strong></span>
+                </>
+              )}
             </p>
           </div>
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Plus, Feather, Check, Youtube, Save, Trash2, Tag, AlertCircle } from 'lucide-react';
+import { X, Plus, Feather, Check, Youtube, Save, Trash2, Tag, AlertCircle, Calendar } from 'lucide-react';
 import { getOccasionsForGenre, OCCASIONS_LIST_1, OCCASIONS_LIST_2 } from '../data/poetryData';
 
 const DEFAULT_KALAM_FORM = {
@@ -299,8 +299,8 @@ export default function SubmitModal({
                 </div>
               </div>
 
-              {/* Reciter & Language */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Reciter, Language & Date/Year */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-xs font-naskh text-gold-300 mb-1.5 font-bold">ذاکر / نوحہ خواں (اگر ہو):</label>
                   <input
@@ -312,7 +312,6 @@ export default function SubmitModal({
                   />
                 </div>
 
-                {/* 3. زبان */}
                 <div>
                   <label className="block text-xs font-naskh text-gold-300 mb-1.5 font-bold">زبان (Language):</label>
                   <select
@@ -326,6 +325,20 @@ export default function SubmitModal({
                     <option value="Saraiki">سرائیکی (Saraiki)</option>
                     <option value="Other">مختلف / دیگر (Other)</option>
                   </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-naskh text-gold-300 mb-1.5 font-bold flex items-center gap-1.5">
+                    <Calendar className="w-3.5 h-3.5 text-gold-400" />
+                    <span>تاریخ / سال (Date / Year):</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.year}
+                    onChange={(e) => setFormData({...formData, year: e.target.value})}
+                    placeholder="مثال: 2024 یا 1445ھ یا 10 محرم 2024"
+                    className="w-full px-4 py-2.5 rounded-xl bg-black/40 border border-gold-500/30 text-white text-sm font-naskh focus:outline-none focus:border-gold-400"
+                  />
                 </div>
               </div>
 

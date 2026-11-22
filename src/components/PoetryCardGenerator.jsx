@@ -152,10 +152,14 @@ export default function PoetryCardGenerator({ kalam, onClose }) {
     ctx.fillStyle = cardTheme === 'parchment' ? '#78350f' : '#f5deb3';
     ctx.fillText('ثناگر حسینی', width / 2, ratio === 'square' ? 900 : 1550);
 
-    // Subtitle / Brand
-    ctx.font = '24px "Noto Naskh Arabic", sans-serif';
+    // Subtitle / Brand & Details
+    ctx.font = '22px "Noto Naskh Arabic", sans-serif';
     ctx.fillStyle = cardTheme === 'parchment' ? '#78716c' : '#9ca3af';
-    ctx.fillText('باضابطہ ویب پورٹل: sanagar.netlify.app', width / 2, ratio === 'square' ? 960 : 1620);
+    const detailParts = [];
+    if (kalam.reciter) detailParts.push(`نوحہ خواں: ${kalam.reciter}`);
+    if (kalam.year) detailParts.push(`سال: ${kalam.year}`);
+    const detailsLine = detailParts.length > 0 ? `${detailParts.join('  •  ')}  |  sanagar.netlify.app` : 'باضابطہ ویب پورٹل: sanagar.netlify.app';
+    ctx.fillText(detailsLine, width / 2, ratio === 'square' ? 960 : 1620);
   };
 
   useEffect(() => {
