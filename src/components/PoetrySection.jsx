@@ -20,6 +20,8 @@ import { GENRES_LIST, getOccasionsForGenre } from '../data/poetryData';
 
 export default function PoetrySection({ 
   poetryList, 
+  occasionsList1,
+  occasionsList2,
   onSelectKalam, 
   onOpenMimbar, 
   onOpenCardGenerator,
@@ -38,7 +40,7 @@ export default function PoetrySection({
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedId, setExpandedId] = useState(null);
 
-  const occasionScope = getOccasionsForGenre(selectedGenre);
+  const occasionScope = getOccasionsForGenre(selectedGenre, occasionsList1, occasionsList2);
 
   const handleGenreChange = (genreVal) => {
     setSelectedGenre(genreVal);
@@ -338,13 +340,14 @@ export default function PoetrySection({
                     </button>
                   </div>
 
-                  {/* Expand / Collapse toggle */}
+                  {/* Open Complete Kalam Reader */}
                   <button
-                    onClick={() => setExpandedId(isExpanded ? null : kalam.id)}
-                    className="text-xs font-naskh text-gold-400 hover:text-gold-200 flex items-center gap-1 cursor-pointer font-bold"
+                    onClick={() => onSelectKalam(kalam)}
+                    className="text-xs font-naskh text-gold-400 hover:text-gold-200 font-bold flex items-center gap-1 cursor-pointer hover:underline transition-all"
+                    title="مکمل کلام ریڈر، تصویر اور پی ڈی ایف موڈ میں کھولیں"
                   >
-                    <span>{isExpanded ? 'مختصر کریں' : 'مکمل کلام'}</span>
-                    <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                    <span>مکمل کلام</span>
+                    <ArrowLeft className="w-3.5 h-3.5" />
                   </button>
                 </div>
               </div>

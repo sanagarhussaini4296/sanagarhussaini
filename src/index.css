@@ -183,3 +183,22 @@ html.theme-parchment .bg-islamic-pattern {
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(212, 175, 55, 0.7);
 }
+
+/* =========================================================================
+   5. PRINT STYLES
+   ========================================================================= */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 12mm 15mm;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  .no-print, nav, header, footer, button, input {
+    display: none !important;
+  }
+}

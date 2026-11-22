@@ -81,23 +81,70 @@ export default function PoetryCardGenerator({ kalam, onClose }) {
     // Main Poetry Lines:
     // If Sindhi, use MB Lateefi; If Urdu, use Jameel Noori Nastaleeq
     const isSindhi = kalam.language === 'Sindhi' || kalam.genreSlug === 'sindhi-kalam';
-    ctx.font = isSindhi 
-      ? 'bold 56px "MB Lateefi", "MB Amar Fayyaz", serif'
-      : 'bold 58px "Jameel Noori Nastaleeq", "Noto Nastaliq Urdu", serif';
-    ctx.fillStyle = cardTheme === 'parchment' ? '#1c1917' : '#f8f6f0';
-    
-    const lines = selectedLines.split('\n');
-    const startY = ratio === 'square' 
-      ? 500 - ((lines.length - 1) * 65)
-      : 880 - ((lines.length - 1) * 75);
+    const isFullKalam = selectedLines === 'FULL_KALAM';
 
-    lines.forEach((line, index) => {
-      ctx.fillText(line, width / 2, startY + (index * 140));
-    });
+    if (isFullKalam) {
+      // Draw entire poem onto one page, auto-adjusted to fill the page
+      const stanzasList = stanzas.map(s => s.split('\n').map(l => l.trim()).filter(Boolean));
+      const totalLines = stanzasList.reduce((acc, lines) => acc + lines.length, 0);
+      const numStanzas = stanzasList.length;
+
+      const headerBottom = ratio === 'story' ? 360 : 220;
+      const footerTop = ratio === 'story' ? 1460 : 800;
+      const availableHeight = footerTop - headerBottom;
+
+      const lineUnits = totalLines + ((numStanzas - 1) * 0.75);
+      const lineHeight = Math.min(ratio === 'story' ? 110 : 70, Math.max(ratio === 'story' ? 52 : 36, Math.floor(availableHeight / lineUnits)));
+      const stanzaFontSize = Math.min(ratio === 'story' ? 50 : 36, Math.max(ratio === 'story' ? 30 : 22, Math.floor(lineHeight * 0.52)));
+      const stanzaGap = Math.floor(lineHeight * 0.75);
+
+      const actualHeight = (totalLines * lineHeight) + ((numStanzas - 1) * stanzaGap);
+      let currentY = headerBottom + Math.max(10, Math.floor((availableHeight - actualHeight) / 2)) + Math.floor(lineHeight * 0.75);
+
+      ctx.font = isSindhi 
+        ? `bold ${stanzaFontSize}px "MB Lateefi", "MB Amar Fayyaz", serif`
+        : `bold ${stanzaFontSize}px "Jameel Noori Nastaleeq", "Noto Nastaliq Urdu", serif`;
+      ctx.fillStyle = cardTheme === 'parchment' ? '#1c1917' : '#f8f6f0';
+
+      stanzasList.forEach((lines, sIdx) => {
+        lines.forEach(line => {
+          ctx.fillText(line, width / 2, currentY);
+          currentY += lineHeight;
+        });
+
+        if (sIdx < numStanzas - 1) {
+          const flourishY = currentY - Math.floor(lineHeight * 0.25) + Math.floor(stanzaGap * 0.35);
+          ctx.font = '20px "Noto Naskh Arabic", sans-serif';
+          ctx.fillStyle = cardTheme === 'parchment' ? '#b8861b' : '#d4af37';
+          ctx.fillText('✦', width / 2, flourishY);
+          currentY += stanzaGap;
+
+          ctx.font = isSindhi 
+            ? `bold ${stanzaFontSize}px "MB Lateefi", "MB Amar Fayyaz", serif`
+            : `bold ${stanzaFontSize}px "Jameel Noori Nastaleeq", "Noto Nastaliq Urdu", serif`;
+          ctx.fillStyle = cardTheme === 'parchment' ? '#1c1917' : '#f8f6f0';
+        }
+      });
+
+    } else {
+      ctx.font = isSindhi 
+        ? 'bold 56px "MB Lateefi", "MB Amar Fayyaz", serif'
+        : 'bold 58px "Jameel Noori Nastaleeq", "Noto Nastaliq Urdu", serif';
+      ctx.fillStyle = cardTheme === 'parchment' ? '#1c1917' : '#f8f6f0';
+      
+      const lines = selectedLines.split('\n');
+      const startY = ratio === 'square' 
+        ? 500 - ((lines.length - 1) * 65)
+        : 880 - ((lines.length - 1) * 75);
+
+      lines.forEach((line, index) => {
+        ctx.fillText(line, width / 2, startY + (index * 140));
+      });
+    }
 
     // Center divider
     ctx.fillStyle = cardTheme === 'parchment' ? '#926317' : '#d4af37';
-    const divY = ratio === 'square' ? startY + (lines.length * 140) + 20 : startY + (lines.length * 140) + 40;
+    const divY = ratio === 'square' ? 840 : 1480;
     ctx.fillText('✦ ✦ ✦', width / 2, divY);
 
     // Primary Identity: ثناگر حسینی
@@ -108,7 +155,7 @@ export default function PoetryCardGenerator({ kalam, onClose }) {
     // Subtitle / Brand
     ctx.font = '24px "Noto Naskh Arabic", sans-serif';
     ctx.fillStyle = cardTheme === 'parchment' ? '#78716c' : '#9ca3af';
-    ctx.fillText('باضابطہ ویب پورٹل', width / 2, ratio === 'square' ? 960 : 1620);
+    ctx.fillText('باضابطہ ویب پورٹل: sanagar.netlify.app', width / 2, ratio === 'square' ? 960 : 1620);
   };
 
   useEffect(() => {
@@ -162,6 +209,17 @@ export default function PoetryCardGenerator({ kalam, onClose }) {
                 مطلوبہ شعر یا بند منتخب فرمائیں:
               </label>
               <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
+                {/* Full Kalam option */}
+                <button
+                  onClick={() => setSelectedLines('FULL_KALAM')}
+                  className={`w-full text-right p-3 rounded-xl border text-xs font-naskh font-bold transition-all cursor-pointer ${
+                    selectedLines === 'FULL_KALAM'
+                      ? 'bg-gold-500/25 border-gold-400 text-gold-200 shadow-md ring-1 ring-gold-400/50'
+                      : 'bg-black/40 border-gold-500/20 text-gold-300 hover:border-gold-500/40'
+                  }`}
+                >
+                  ⭐ مکمل کلام (پورا کلام ایک صفحے پر)
+                </button>
                 {stanzas.map((stanza, i) => (
                   <button
                     key={i}

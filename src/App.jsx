@@ -19,7 +19,7 @@ import ConfirmDeleteModal from './components/ConfirmDeleteModal';
 import PoetryCardGenerator from './components/PoetryCardGenerator';
 
 // Data
-import { POETRY_DATABASE } from './data/poetryData';
+import { POETRY_DATABASE, OCCASIONS_LIST_1, OCCASIONS_LIST_2 } from './data/poetryData';
 import { ARTICLES_DATABASE } from './data/articlesData';
 
 export default function App() {
@@ -54,6 +54,23 @@ export default function App() {
       if (saved) return JSON.parse(saved);
     } catch (e) {}
     return ARTICLES_DATABASE;
+  });
+
+  // Dynamic Occasions state (Admin can add/delete occasions, persists in browser)
+  const [occasionsList1, setOccasionsList1] = useState(() => {
+    try {
+      const saved = localStorage.getItem('sanagar_occasions_list_1_v4');
+      if (saved) return JSON.parse(saved);
+    } catch (e) {}
+    return OCCASIONS_LIST_1;
+  });
+
+  const [occasionsList2, setOccasionsList2] = useState(() => {
+    try {
+      const saved = localStorage.getItem('sanagar_occasions_list_2_v4');
+      if (saved) return JSON.parse(saved);
+    } catch (e) {}
+    return OCCASIONS_LIST_2;
   });
 
   const [favorites, setFavorites] = useState([]);
@@ -102,6 +119,40 @@ export default function App() {
       localStorage.setItem('sanagar_articles_list_v1', JSON.stringify(articlesList));
     } catch (e) {}
   }, [articlesList]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('sanagar_occasions_list_1_v4', JSON.stringify(occasionsList1));
+    } catch (e) {}
+  }, [occasionsList1]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('sanagar_occasions_list_2_v4', JSON.stringify(occasionsList2));
+    } catch (e) {}
+  }, [occasionsList2]);
+
+  // Occasions Admin handlers
+  const handleAddOccasion = (genre, newOccasion) => {
+    const trimmed = newOccasion.trim();
+    if (!trimmed) return;
+    if (genre === 'نوحہ' || genre === 'سلام' || genre === 'مرثیہ') {
+      setOccasionsList2(prev => prev.includes(trimmed) ? prev : [trimmed, ...prev]);
+    } else {
+      setOccasionsList1(prev => prev.includes(trimmed) ? prev : [trimmed, ...prev]);
+    }
+    showToast(`مناسبت "${trimmed}" فہرست میں شامل کر دی گئی!`);
+  };
+
+  const handleDeleteOccasion = (genre, occasionToDelete) => {
+    if (!occasionToDelete) return;
+    if (genre === 'نوحہ' || genre === 'سلام' || genre === 'مرثیہ') {
+      setOccasionsList2(prev => prev.filter(item => item !== occasionToDelete));
+    } else {
+      setOccasionsList1(prev => prev.filter(item => item !== occasionToDelete));
+    }
+    showToast(`مناسبت "${occasionToDelete}" فہرست سے حذف کر دی گئی۔`);
+  };
 
   // Global keyboard shortcuts: Ctrl+K (Search), Ctrl+Shift+A (Hidden Admin Login)
   useEffect(() => {
@@ -348,6 +399,8 @@ export default function App() {
         {activeTab === 'poetry' && (
           <PoetrySection
             poetryList={poetryList}
+            occasionsList1={occasionsList1}
+            occasionsList2={occasionsList2}
             onSelectKalam={(kalam) => setMimbarKalam(kalam)}
             onOpenMimbar={(kalam) => setMimbarKalam(kalam)}
             onOpenCardGenerator={(kalam) => setCardGeneratorKalam(kalam)}
@@ -447,6 +500,10 @@ export default function App() {
         }}
         kalamToEdit={editingKalam}
         onSaveKalam={handleSaveKalam}
+        occasionsList1={occasionsList1}
+        occasionsList2={occasionsList2}
+        onAddOccasion={handleAddOccasion}
+        onDeleteOccasion={handleDeleteOccasion}
       />
 
       <ArticleSubmitModal

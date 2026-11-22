@@ -17,36 +17,36 @@ export const LANGUAGES_LIST = [
   { label: "مختلف / دیگر (Other)", value: "Other" },
 ];
 
-// LIST 1: ولادت، اعیاد، جشن و خوشی (Wiladat, Jashan & Celebratory Occasions)
+// LIST 1: حمد، نعت، قصیدہ و منقبت مناسبات (حمد، نعت، اعیاد، جشن و شخصیات)
 export const OCCASIONS_LIST_1 = [
   "حمد باري تعاليٰ",
   "نعت",
-  "ولادت حضرت امام موسٰي ڪاظم عليه السلام",
+  "حضرت امام موسٰي ڪاظم عليه السلام",
   "عيد ِ زهرا سلام الله عليها - عيد ِ شجاع - تاج پوشي امام ِ زمانهٰ عليه السلام",
-  "ولادت حضرت محمڊ مصطفيٰ صلي الله عليه و آله وسلم",
-  "ولادت حضرت امام جعفر صادق عليه السلام",
-  "ولادت حضرت بيبي امّ ِ ڪلثوم سلام الله عليها",
-  "ولادت حضرت امام حسن عسڪري عليه السلام",
-  "ولادت حضرت بيبي فاطمه زهرا سلام الله عليها",
-  "ولادت حضرت امام محمد باقر عليه السلام",
-  "ولادت حضرت امام علي نقي عليه السلام",
-  "ولادت حضرت علي اصغر عليه السلام",
-  "ولادت حضرت امام محمد تقي عليه السلام",
-  "ولادت حضرت امام علي عليه السلام",
-  "ولادت حضرت بيبي سڪينه سلام الله عليها",
+  "حضرت محمڊ مصطفيٰ صلي الله عليه و آله وسلم",
+  "حضرت امام جعفر صادق عليه السلام",
+  "حضرت بيبي امّ ِ ڪلثوم سلام الله عليها",
+  "حضرت امام حسن عسڪري عليه السلام",
+  "حضرت بيبي فاطمه زهرا سلام الله عليها",
+  "حضرت امام محمد باقر عليه السلام",
+  "حضرت امام علي نقي عليه السلام",
+  "حضرت علي اصغر عليه السلام",
+  "حضرت امام محمد تقي عليه السلام",
+  "حضرت امام علي عليه السلام",
+  "حضرت بيبي سڪينه سلام الله عليها",
   "نياز حضرت امام جعفر صادق عليه السلام (ڪونڊا)",
   "معراج",
   "آمد ِ شعبان",
-  "ولادت حضرت زينب سلام الله عليها",
-  "ولادت حضرت امام حسين عليه السلام",
-  "ولادت حضرت عباس غازي علمدار عليه السلام",
-  "ولادت حضرت امام زين العابدين عليه السلام",
-  "ولادت حضرت قاسم ابن حسن عليه السلام",
-  "ولادت حضرت علي اڪبر عليه السلام",
-  "ولادت حضرت امام مهدي عليه السلام",
+  "حضرت زينب سلام الله عليها",
+  "حضرت امام حسين عليه السلام",
+  "حضرت عباس غازي علمدار عليه السلام",
+  "حضرت امام زين العابدين عليه السلام",
+  "حضرت قاسم ابن حسن عليه السلام",
+  "حضرت علي اڪبر عليه السلام",
+  "حضرت امام مهدي عليه السلام",
   "رمضان نعت",
-  "ولادت حضرت اامام حسن عليه السلام",
-  "ولادت حضرت امام علي رضا عليه السلام",
+  "حضرت امام حسن عليه السلام",
+  "حضرت امام علي رضا عليه السلام",
   "عقد حضرت زهرا و امام علي عليه السلام",
   "سفر حج",
   "عيد ِ غدير - عليا والي الله",
@@ -97,33 +97,51 @@ export const OCCASIONS_LIST_2 = [
 
 /**
  * Returns the scoped occasion configuration for a given genre.
+ * Supports custom dynamic lists saved by admin in localStorage.
  */
-export function getOccasionsForGenre(genre) {
+export function getOccasionsForGenre(genre, customList1 = OCCASIONS_LIST_1, customList2 = OCCASIONS_LIST_2) {
+  const list1 = customList1 || OCCASIONS_LIST_1;
+  const list2 = customList2 || OCCASIONS_LIST_2;
+
   if (genre === "حمد") {
-    return { mode: "single", allLabel: "حمد باري تعاليٰ", list: ["حمد باري تعاليٰ"] };
+    const hamdItems = list1.filter(item => item.includes("حمد"));
+    return { 
+      mode: "single", 
+      allLabel: "حمد باري تعاليٰ", 
+      list: hamdItems.length > 0 ? hamdItems : ["حمد باري تعاليٰ"],
+      fullList: list1
+    };
   }
   if (genre === "نعت") {
-    return { mode: "single", allLabel: "نعت و رمضان نعت", list: ["نعت", "رمضان نعت"] };
+    const naatItems = list1.filter(item => item.includes("نعت") || item.includes("محمڊ") || item.includes("مصطفيٰ"));
+    return { 
+      mode: "single", 
+      allLabel: "نعت", 
+      list: naatItems.length > 0 ? naatItems : ["نعت", "رمضان نعت"],
+      fullList: list1
+    };
   }
   if (genre === "قصیدہ" || genre === "منقبت") {
     return {
       mode: "wiladat",
-      allLabel: "تمام مناسباتِ ولادت و اعیاد (Wiladat & Jashan)",
-      list: OCCASIONS_LIST_1.filter((item) => item !== "حمد باري تعاليٰ" && item !== "نعت")
+      allLabel: "تمام مناسبات (حمد، نعت، قصیدہ، منقبت)",
+      list: list1,
+      fullList: list1
     };
   }
   if (genre === "نوحہ" || genre === "سلام" || genre === "مرثیہ") {
     return {
       mode: "aza",
       allLabel: "تمام مناسباتِ عزاداری و شہادت (Aza & Mourning)",
-      list: OCCASIONS_LIST_2
+      list: list2,
+      fullList: list2
     };
   }
   return {
     mode: "all",
     allLabel: "تمام مناسبات (All Occasions)",
-    list1: OCCASIONS_LIST_1,
-    list2: OCCASIONS_LIST_2
+    list1: list1,
+    list2: list2
   };
 }
 
